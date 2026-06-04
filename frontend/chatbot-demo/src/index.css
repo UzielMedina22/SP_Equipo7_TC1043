@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+h1, h2, p {
+    color: #000;
+}
+
+button.btn-1 {
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button.btn-1:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+button.btn-open-chatbot {
+  position: fixed;
+  transform: translate(92vw, 82vh);
+  width: 60px;
+  height: 60px;
+  padding: 15px;
+  border-radius: 50%;
+  background-color: #0058A3;
+  color: #fff;
+}
+
+.chat-panel-header {
+  background-color: #0058A3;
+  color: #fff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 10px;
+}
+
+.chat-panel {
+  position: fixed;
+  transform: translate(72vw, 26vh);
+}
