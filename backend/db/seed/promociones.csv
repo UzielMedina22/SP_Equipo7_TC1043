@@ -1,0 +1,6 @@
+﻿promotion_id,product_id,promotion_name,discount_percent,start_date,end_date,promotion_status
+PR001,P002,Regreso a clases,15,2026-05-01,2026-06-30,Activa
+PR002,P004,Semana del hogar,20,2026-06-01,2026-06-15,Activa
+PR003,P007,Home office,10,2026-05-15,2026-07-15,Activa
+PR004,P014,Renueva tu sala,12,2026-06-01,2026-06-30,Activa
+PR005,P015,Sofa cama promo,8,2026-06-10,2026-06-25,Programada

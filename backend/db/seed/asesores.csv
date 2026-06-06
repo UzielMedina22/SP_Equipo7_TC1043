@@ -1,0 +1,7 @@
+﻿advisor_id,advisor_name,specialty,email,status,shift_start,shift_end
+A001,Ana Lopez,Recamaras,ana.lopez@ikea-ejemplo.com,Disponible,09:00,17:00
+A002,Carlos Ruiz,Oficina,carlos.ruiz@ikea-ejemplo.com,Disponible,10:00,18:00
+A003,Sofia Martinez,Devoluciones,sofia.martinez@ikea-ejemplo.com,Ocupado,09:00,17:00
+A004,Juan Perez,Envios,juan.perez@ikea-ejemplo.com,Disponible,12:00,20:00
+A005,Mariana Torres,Cocina,mariana.torres@ikea-ejemplo.com,Disponible,08:00,16:00
+A006,Luis Hernandez,Sala,luis.hernandez@ikea-ejemplo.com,Disponible,11:00,19:00

@@ -1,0 +1,11 @@
+﻿faq_id,topic,question,answer
+F001,Envios,Cuanto tarda mi pedido,Los envios nacionales tardan entre 3 y 7 dias habiles dependiendo de la zona.
+F002,Devoluciones,Puedo devolver un producto,Las devoluciones son aceptadas dentro de los primeros 30 dias con ticket y producto en buen estado.
+F003,Inventario,Como saber si hay existencia,La disponibilidad se muestra en la ficha del producto y puede consultarse por tienda o entrega a domicilio.
+F004,Armado,Incluye servicio de armado,El servicio de armado puede contratarse por separado segun el producto y la cobertura disponible.
+F005,Pagos,Que formas de pago aceptan,Se aceptan tarjetas de debito credito y pagos digitales disponibles en la tienda en linea.
+F006,Garantias,Los productos tienen garantia,Los productos cuentan con garantia segun categoria y condiciones indicadas en la ficha del producto.
+F007,Medidas,Como se si un mueble cabe en mi espacio,Revisa ancho profundidad y alto del producto y compara contra las medidas del espacio disponible.
+F008,Click and collect,Puedo recoger mi pedido en tienda,Algunos productos permiten recogida en tienda si hay inventario disponible.
+F009,Facturacion,Puedo solicitar factura,La factura puede solicitarse con los datos fiscales despues de realizar la compra.
+F010,Cambios,Puedo cambiar color o modelo,Los cambios dependen de disponibilidad y politica vigente de devoluciones.

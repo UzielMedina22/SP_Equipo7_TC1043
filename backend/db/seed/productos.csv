@@ -1,4 +1,21 @@
-nombre,precio,categoria,descripcion
-Comedor de cedro,10000.00,Cocina,Comedor rectangular de 2m x 1.5m.
-Silla roja de plástico,900.00,Sala,Silla de plástico resistente para diferentes espacios.
-Marco para cama de madera,15000.00,Cuartos,Marco de 2.10m de altura y 1.5m de ancho.
+﻿product_id,product_line,product_name,category,color,width_cm,depth_cm,height_cm,weight_kg,price_mxn,stock_units,availability_status,source_url
+P001,LACK,Mesa auxiliar,Sala,Blanco,55,55,45,3.99,399,50,Disponible,https://www.ikea.com/mx/es/
+P002,BILLY,Librero,Sala,Blanco,80,28,202,35.0,2499,18,Disponible,https://www.ikea.com/mx/es/
+P003,MALM,Cama matrimonial,Recamara,Cafe,140,200,38,55.0,6999,9,Disponible,https://www.ikea.com/mx/es/
+P004,POANG,Sillon,Sala,Beige,68,82,100,11.0,3499,14,Disponible,https://www.ikea.com/mx/es/
+P005,KALLAX,Estanteria,Almacenamiento,Negro,77,39,147,20.5,1999,0,Agotado,https://www.ikea.com/mx/es/
+P006,HEMNES,Comoda 3 cajones,Recamara,Blanco,108,50,96,46.0,4999,5,Disponible,https://www.ikea.com/mx/es/
+P007,MARKUS,Silla oficina,Oficina,Negro,62,60,129,22.0,4299,11,Disponible,https://www.ikea.com/mx/es/
+P008,BRIMNES,Closet 2 puertas,Recamara,Blanco,78,50,190,48.0,5499,3,Disponible,https://www.ikea.com/mx/es/
+P009,ADILS,Pata para mesa,Oficina,Blanco,4,4,70,0.9,149,80,Disponible,https://www.ikea.com/mx/es/
+P010,LINNMON,Cubierta de mesa,Oficina,Blanco,100,60,3,5.0,899,22,Disponible,https://www.ikea.com/mx/es/
+P011,RANARP,Lampara de trabajo,Iluminacion,Negro,15,15,40,2.0,799,7,Disponible,https://www.ikea.com/mx/es/
+P012,SKUBB,Caja organizadora,Almacenamiento,Gris,31,34,33,0.8,249,65,Disponible,https://www.ikea.com/mx/es/
+P013,TARVA,Base de cama individual,Recamara,Pino,90,200,30,28.0,3499,4,Disponible,https://www.ikea.com/mx/es/
+P014,LOHALS,Tapete tejido plano,Decoracion,Natural,160,230,1,4.2,1999,12,Disponible,https://www.ikea.com/mx/es/
+P015,FRIHETEN,Sofa cama,Sala,Gris,225,105,83,90.0,14999,2,Disponible,https://www.ikea.com/mx/es/
+P016,KIVIK,Sofa 3 plazas,Sala,Azul,228,95,83,75.0,17999,1,Disponible,https://www.ikea.com/mx/es/
+P017,ALEX,Cajonera,Oficina,Blanco,36,58,70,27.0,2999,0,Agotado,https://www.ikea.com/mx/es/
+P018,INGOLF,Silla comedor,Comedor,Blanco,43,52,91,5.2,1299,24,Disponible,https://www.ikea.com/mx/es/
+P019,MELLTORP,Mesa comedor,Comedor,Blanco,125,75,74,17.0,2799,8,Disponible,https://www.ikea.com/mx/es/
+P020,SUNNERSTA,Carrito cocina,Cocina,Blanco,56,33,97,7.5,999,16,Disponible,https://www.ikea.com/mx/es/
