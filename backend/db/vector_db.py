@@ -86,12 +86,14 @@ for id, row in advisors_dataframe.iterrows():
     advisor_id_key = row["advisor_id"]
     advisor_name = row["advisor_name"]
     advisor_specialty = row["specialty"]
+    advisor_email = row["email"]
     advisor_status = row["status"]
     advisor_shift_start = row["shift_start"]
     advisor_shift_end = row["shift_end"]
 
     advisor_info = f"ID: {advisor_id_key}\n" \
                    f"Nombre: {advisor_name}\n" \
+                   f"Email: {advisor_email}\n" \
                    f"Especialidad: {advisor_specialty}\n" \
                    f"Estado: {advisor_status}\n" \
                    f"Inicio de turno: {advisor_shift_start}\n" \
