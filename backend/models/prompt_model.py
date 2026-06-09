@@ -1,4 +1,5 @@
 from pydantic import BaseModel
 
+# Modelo de un prompt del usuario.
 class Prompt(BaseModel):
-    description: str
+    prompt_message: str

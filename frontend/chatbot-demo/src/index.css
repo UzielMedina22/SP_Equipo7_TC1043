@@ -7,10 +7,6 @@ html, body {
     background-color: #ffffff;
 }
 
-h1, h2, p {
-    color: #000;
-}
-
 button.btn-1 {
   border-radius: 10px;
   padding: 10px;
@@ -24,26 +20,62 @@ button.btn-1:hover {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
 }
 
-button.btn-open-chatbot {
-  position: fixed;
-  transform: translate(92vw, 82vh);
-  width: 60px;
-  height: 60px;
-  padding: 15px;
-  border-radius: 50%;
-  background-color: #0058A3;
-  color: #fff;
-}
-
 .chat-panel-header {
   background-color: #0058A3;
   color: #fff;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-.chat-panel {
-  position: fixed;
-  transform: translate(72vw, 26vh);
+.chat-panel-footer {
+  position: relative;
+  background-color: #0058A3;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.chat-panel-input {
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 50px;
+}
+
+.chat-panel-send-button:hover {
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #ffffff2c;
+  transition: 0.3ms;
+}
+
+.chat-panel-send-button:active {
+  background-color: #ffffff44;
+  transition: 3ms;
+}
+
+.chat-panel-input::placeholder {
+  color: #777777;
+}
+
+div.comment-user {
+  background-color: #BEE4FF;
+  color: #004E85;
+  border-radius: 10px;
+}
+
+.comment-user-name {
+  color: #003C66;
+  font-weight: bold;
+}
+
+div.comment-bot {
+  background-color: #FFEA95;
+  color: #905900;
+  border-radius: 10px;
+}
+
+.comment-bot-name {
+  color: #603B00;
+  font-weight: bold;
 }
