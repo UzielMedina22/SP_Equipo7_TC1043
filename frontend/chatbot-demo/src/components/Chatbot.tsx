@@ -89,7 +89,7 @@ export default function Chatbot({ className = "" }) {
   }, [])
 
   return (
-    <div className={`${className} mx-auto bg-white rounded-lg shadow-lg`}>
+    <div className={`${className} mx-auto bg-white shadow-lg`} style={{borderRadius: 12}}>
       <div className="w-full chat-panel-header px-4 flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-white">IKEA-Bot</h2>
       </div>
