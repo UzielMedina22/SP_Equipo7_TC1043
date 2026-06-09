@@ -13,9 +13,12 @@ Este es un chatbot de atención al cliente desarrollado para la Etapa 3 de la Si
 - Para interactuar con el chatbot ve a `http://127.0.0.1:[PUERTO]/chatbot-conversation`. El protocolo utilizado es `POST` y el JSON que debes mandar es.
 ```
 {
-  "description": "Aquí ingresa el mensaje o pregunta que le quieras mandar al chatbot."
+  "prompt_message": "Aquí va el mensaje o pregunta que le quieras mandar al chatbot."
 }
 ```
 
 ### Frontend
-- Próximamente.
+- Asegúrate de tener Node.js instalado en tu equipo.
+- Ubícate en la carpeta `frontend/chatbot-demo`.
+- Abre la terminal e ingresa `npm install` (o `npm.cmd install`) para instalar las dependencias necesarias.
+- Ingresa `npm run dev` (o `npm.cmd run dev`) para levantar el servidor de React.
