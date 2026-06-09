@@ -11,6 +11,7 @@ Este es un chatbot de atención al cliente desarrollado para la Etapa 3 de la Si
 - Instala las dependencias con `pip install requirements.txt`
 - Para levantar el servidor, ingresa `daphne -b 0.0.0.0 -p [PUERTO] app:API`.
 - Para interactuar con el chatbot ve a `http://127.0.0.1:[PUERTO]/chatbot-conversation`. El protocolo utilizado es `POST` y el JSON que debes mandar es.
+- IMPORTANTE: Asegúrate de que Ollama esté corriendo en el equipo mientras el servidor de backend esté corriendo.
 ```
 {
   "prompt_message": "Aquí va el mensaje o pregunta que le quieras mandar al chatbot."
@@ -22,3 +23,6 @@ Este es un chatbot de atención al cliente desarrollado para la Etapa 3 de la Si
 - Ubícate en la carpeta `frontend/chatbot-demo`.
 - Abre la terminal e ingresa `npm install` (o `npm.cmd install`) para instalar las dependencias necesarias.
 - Ingresa `npm run dev` (o `npm.cmd run dev`) para levantar el servidor de React.
+
+## IMPORTANTE
+El servidor de backend utiliza protección CORS. Si no recibes respuesta del chatbot, haz clic derecho y da clic en "Inspeccionar". Revisa la consola y verifica si hay algún error relacionado con el endpoint. En caso de tenerlo, modifiqué la línea 113 de `app.py`, agregando el link local del servidor de React (ej.: `http://localhost:5173/`).
