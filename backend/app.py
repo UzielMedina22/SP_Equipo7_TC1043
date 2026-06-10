@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models.prompt_model import Prompt
+from models.prompt_model import Prompt # Adjusted import path
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 from db.vector_db import products_retriever, promotions_retriever, faqs_retriever, advisors_retriever
@@ -17,7 +17,7 @@ model = OllamaLLM(model="llama3.2")
 
 date = datetime.datetime.now()
 
-instructions = """
+base_instructions = """
 Hoy es {date}.
 
 Eres un asistente virtual de atención al cliente de la empresa internacional de muebles IKEA.
@@ -25,16 +25,6 @@ Tus funciones son ayudar a los clientes a resolver sus dudas sobre los productos
 Cuando el usuario te pida ayuda EN TODO LO QUE TENGA QUE VER CON REEMBOLSOS, PEDIDOS DEFECTUOSOS Y PROBLEMAS DE ENVÍO, 
 le vas a pasar los CONTACTOS CON LOS ASESORES (NOMBRE, EMAIL, ÁREA Y HORARIO DE ATENCIÓN). El área del asesor
 DEBE ESTAR ESTRICTAMENTE RELACIONADA al problema del cliente (NUNCA ofrezcas asesores de áreas irrelevantes). 
-
-INFORMACIÓN DE PRODUCTOS Y PROMOCIONES (debes usar esta información para responder al cliente):
-- Productos disponibles: {products}
-- Promociones vigentes: {promotions}
-
-Cuando el cliente pregunte sobre promociones o productos, PROPORCIONA LA INFORMACIÓN DISPONIBLE.
-NUNCA LE PIDAS AL CLIENTE QUE TE DÉ DATOS DE PROMOCIONES O PRODUCTOS DEL INVENTARIO.
-
-Los FAQs son los siguientes: {faqs}
-Los asesores disponibles son: {advisors}
 
 El historial de la conversación es este: {chat_history}. IMPORTANTE: Solo es para que lo leas y te bases en eso
 para tus respuestas. NO LO MENCIONES, SOLO ES COMO TU MEMORIA "CEREBRAL".
@@ -47,12 +37,6 @@ ATENCIÓN: Cuando el cliente te agradezca, SOLAMENTE DILE "De nada. ¡Que tenga 
 
 REGLAS IMPORTANTES:
 Respuestas claras, breves y concisas, lo más actualizadas posible.
-Si es un producto DAÑADO, DEFECTUOSO O CON PROBLEMAS DE ENVÍO:
-   - Muestra los datos del asesor: nombre, email, área y horario.
-   - El área del asesor debe estar ESTRICTAMENTE RELACIONADO al problema del cliente.
-   - NUNCA ofrezcas contactos de asesores cuyas áreas NO ESTÉN RELACIONADAS al problema del cliente.
-   - NO incluyas FAQs, productos, ni información extra.
-   - Sé empático con el problema del cliente.
 Si necesitas información del cliente: SOLO pide información relacionada con su problema.
 TRATA de responder lo MÁS PRECISO QUE PUEDAS.
 TRATA de ayudar al cliente HASTA EL LÍMITE DE TU ALCANCE.
@@ -60,12 +44,64 @@ Si después de intentar de ayudar al cliente no puedes resolver algo, ofrece los
 NUNCA pidas ayuda ni solicites datos innecesarios.
 NUNCA le pidas promociones, productos, o contactos como si fuera el cliente quien te ayuda.
 NUNCA digas que no pudiste responder una pregunta. Si necesario, deriva al asesor.
-NUNCA incluyas FAQs si el cliente reporta daño/defecto/envío.
 """
 
-template_prompt = ChatPromptTemplate.from_template(instructions)
+damage_specific_instructions = """
+REGLAS PARA PRODUCTO DAÑADO, DEFECTUOSO O CON PROBLEMAS DE ENVÍO:
+   - Muestra los datos del asesor: nombre, email, área y horario.
+   - El área del asesor debe estar ESTRICTAMENTE RELACIONADO al problema del cliente.
+   - NUNCA ofrezcas contactos de asesores cuyas áreas NO ESTÉN RELACIONADAS al problema del cliente.
+   - NO incluyas FAQs, productos, ni información extra.
+   - Sé empático con il problema del cliente.
+   - NUNCA incluyas FAQs si el cliente reporta daño/defecto/envío.
+"""
+
+general_context_instructions = """
+INFORMACIÓN DE PRODUCTOS Y PROMOCIONES (debes usar esta información para responder al cliente):
+- Productos disponibles: {products}
+- Promociones vigentes: {promotions}
+
+Cuando el cliente pregunte sobre promociones o productos, PROPORCIONA LA INFORMACIÓN DISPONIBLE.
+NUNCA LE PIDAS AL CLIENTE QUE TE DÉ DATOS DE PROMOCIONES O PRODUCTOS DEL INVENTARIO.
+
+Los FAQs son los siguientes: {faqs}
+Los asesores disponibles son: {advisors}
+"""
+
+catalog_context_instructions = """
+INFORMACIÓN DE PRODUCTOS Y PROMOCIONES (debes usar esta información para responder al cliente):
+- Productos disponibles: {products}
+- Promociones vigentes: {promotions}
+
+Cuando el cliente pregunte sobre productos o promociones, RESPONDE DIRECTAMENTE con la información disponible.
+NO le pidas más contexto.
+NO menciones FAQs ni asesores.
+Si hay varios productos o promociones relevantes, enuméralos de forma breve y clara.
+"""
+
+promotion_context_instructions = """
+INFORMACIÓN DE PROMOCIONES (debes usar esta información para responder al cliente):
+- Promociones vigentes: {promotions}
+
+Cuando el cliente pregunte por promociones, RESPONDE SOLO con las promociones disponibles.
+NO menciones productos.
+NO pidas más contexto.
+Si no hay promociones relevantes, indícalo de forma breve.
+"""
+
+template_prompt = ChatPromptTemplate.from_template(base_instructions + general_context_instructions)
 chain = template_prompt | model
 chat_history = []
+
+
+def documents_to_string(documents):
+    if not documents:
+        return ""
+
+    return "\n\n".join(
+        document.page_content if hasattr(document, "page_content") else str(document)
+        for document in documents
+    )
 
 # Formatear el historial del chat.
 def chat_history_to_string(history):
@@ -89,7 +125,7 @@ def damage(message):
 
 # Buscar palabras de agradecimiento en el mensaje del usuario.
 def thanks(message):
-    thank_words = ["amable", "muy amable", "gracias", "muchas gracias", "agradezco"]
+    thank_words = ["amable", "muy amable", "gracias", "muchas gracias", "muchisimas gracias", "muchísimas gracias", "agradezco"]
     for word in thank_words:
         if word in message.lower().strip(): 
             return True
@@ -100,6 +136,15 @@ def derived_to_advisor(message):
     advisor_words = ["email", "área", "horario"]
     for word in advisor_words:
         if word in message.lower().strip(): 
+            return True
+    return False
+
+
+def promotion_query(message):
+    promotion_words = ["promocion", "promoción", "promociones", "oferta", "ofertas", "descuento", "descuentos"]
+    lowered_message = message.lower()
+    for word in promotion_words:
+        if word in lowered_message:
             return True
     return False
 # _______________________________________________________________________________________
@@ -141,8 +186,7 @@ def health():
 # Endpoint para obtener la respuesta del chatbot.
 @API.post("/chatbot-conversation")
 async def chatbot_conversation(prompt: Prompt):
-    global chat_history
-    global date
+    global date, chat_history
     
     time_start = time.time_ns()
     date = datetime.datetime.now()
@@ -161,42 +205,60 @@ async def chatbot_conversation(prompt: Prompt):
     
     # Agradecimiento.
     if thanks(processed_prompt):
-        response = "De nada. ¡Que tenga un buen día!"
+        response = "De nada. ¡Que tenga un buen día!" # Append to the history that will be returned, not a global one
         chat_history.append({"Usuario": processed_prompt, "Bot": response})
         time_end = time.time_ns()
         total_response_time = (time_end - time_start) * (10**(-9))
         current_session_time = (time.time_ns() - session_time) * (10**(-9))
 
         return {
-            "user_prompt": processed_prompt,
+            "date": date.isoformat(),
             "chatbot_response": response,
             "derived_to_advisor": derived, 
-            "response_time_seconds": total_response_time,
-            "current_session_time": current_session_time
+            "response_time_seconds": f"{total_response_time:.2f}",
+            "current_session_time": f"{current_session_time:.2f}"
         }
     
-    # Daño.
-    if damage(processed_prompt):
-        productos = []
-        promociones = []
-        faqs = []
-        advisors = advisors_retriever.invoke(processed_prompt)
-    else:
-        productos = products_retriever.invoke(processed_prompt)
-        promociones = promotions_retriever.invoke(processed_prompt)
-        faqs = faqs_retriever.invoke(processed_prompt)
-        advisors = advisors_retriever.invoke(processed_prompt)
-
-    response = chain.invoke({
+    final_instructions = base_instructions
+    llm_context = {
         "date": date,
-        "products": productos,
-        "promotions": promociones,
-        "faqs": faqs,
-        "advisors": advisors,
         "question": processed_prompt,
         "chat_history": chat_history_to_string(chat_history),
         "greeting_instruction": greeting_instruction
-    })
+    }
+
+    # Detectar queja por daños.
+    if damage(processed_prompt):
+        final_instructions += damage_specific_instructions
+        advisors_data = advisors_retriever.invoke(processed_prompt)
+        llm_context["advisors"] = advisors_data
+        llm_context["products"] = [] 
+        llm_context["promotions"] = [] 
+        llm_context["faqs"] = [] 
+    elif promotion_query(processed_prompt):
+        final_instructions += promotion_context_instructions
+        promotions_data = promotions_retriever.invoke(processed_prompt)
+        llm_context["promotions"] = documents_to_string(promotions_data)
+        llm_context["products"] = ""
+    else:
+        products_data = products_retriever.invoke(processed_prompt)
+        promotions_data = promotions_retriever.invoke(processed_prompt)
+
+        if "producto" in processed_prompt.lower() or "promocion" in processed_prompt.lower() or "promoción" in processed_prompt.lower():
+            final_instructions += catalog_context_instructions
+            llm_context["products"] = documents_to_string(products_data)
+            llm_context["promotions"] = documents_to_string(promotions_data)
+        else:
+            final_instructions += general_context_instructions
+            llm_context["products"] = documents_to_string(products_data)
+            llm_context["promotions"] = documents_to_string(promotions_data)
+            llm_context["faqs"] = documents_to_string(faqs_retriever.invoke(processed_prompt))
+            llm_context["advisors"] = documents_to_string(advisors_retriever.invoke(processed_prompt))
+
+    template_prompt = ChatPromptTemplate.from_template(final_instructions)
+    chain = template_prompt | model
+
+    response = chain.invoke(llm_context)
 
     if derived_to_advisor(response): derived = 1
 
@@ -206,7 +268,7 @@ async def chatbot_conversation(prompt: Prompt):
     current_session_time = (time.time_ns() - session_time) * (10**(-9))
 
     return { 
-        "date": date, 
+        "date": date.isoformat(), 
         "chatbot_response": response, 
         "derived_to_advisor": derived, 
         "response_time_seconds": f"{total_response_time:.2f}",
