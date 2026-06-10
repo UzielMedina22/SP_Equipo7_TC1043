@@ -5,7 +5,7 @@ from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 from db.vector_db import products_retriever, promotions_retriever, faqs_retriever, advisors_retriever
 import datetime
-
+import time
 
 # ________________________________________________________________________________________
 
@@ -84,15 +84,24 @@ def damage(message):
     for word in damage_words:
         if word in message.lower(): 
             return True
+    return False
 
 
 # Buscar palabras de agradecimiento en el mensaje del usuario.
 def thanks(message):
-    thank_words = ["amable", "gracias", "agradezco"]
+    thank_words = ["amable", "muy amable", "gracias", "muchas gracias", "agradezco"]
     for word in thank_words:
         if word in message.lower().strip(): 
             return True
+    return False
 
+# Verificar que le ha derivador con un asesor.
+def derived_to_advisor(message):
+    advisor_words = ["email", "área", "horario"]
+    for word in advisor_words:
+        if word in message.lower().strip(): 
+            return True
+    return False
 # _______________________________________________________________________________________
 
 """
@@ -104,7 +113,9 @@ ser 3000, 5000, etc.
 """
 
 
-API = FastAPI()     # Crear la API.
+API = FastAPI()                 # Crear la API.
+
+session_time = time.time_ns()   # Iniciar el tiempo de la sesión
 
 """
 Permitir que el frontend se conecte a la API. IMPORTANTE: Si el link de su servidor de React no está aquí,
@@ -132,8 +143,10 @@ def health():
 async def chatbot_conversation(prompt: Prompt):
     global chat_history
     global date
-
+    
+    time_start = time.time_ns()
     date = datetime.datetime.now()
+    derived = 0
     
     if not prompt.prompt_message or prompt.prompt_message.strip() == "":
         raise HTTPException(status_code=400, detail="El prompt ingresado es inválido o está vacío.")
@@ -146,24 +159,29 @@ async def chatbot_conversation(prompt: Prompt):
     else:
         greeting_instruction = "No saludes al usuario. Solo responde su pregunta."
     
-    # Detectar si es un agradecimiento simple
+    # Agradecimiento.
     if thanks(processed_prompt):
         response = "De nada. ¡Que tenga un buen día!"
         chat_history.append({"Usuario": processed_prompt, "Bot": response})
+        time_end = time.time_ns()
+        total_response_time = (time_end - time_start) * (10**(-9))
+        current_session_time = (time.time_ns() - session_time) * (10**(-9))
+
         return {
             "user_prompt": processed_prompt,
-            "chatbot_response": response
+            "chatbot_response": response,
+            "derived_to_advisor": derived, 
+            "response_time_seconds": total_response_time,
+            "current_session_time": current_session_time
         }
     
-    # Detectar si es un problema de daño/defecto
+    # Daño.
     if damage(processed_prompt):
-        # Si es producto dañado/defectuoso, priorizar asesores y NO incluir FAQs
         productos = []
         promociones = []
         faqs = []
         advisors = advisors_retriever.invoke(processed_prompt)
     else:
-        # Recuperación normal de productos
         productos = products_retriever.invoke(processed_prompt)
         promociones = promotions_retriever.invoke(processed_prompt)
         faqs = faqs_retriever.invoke(processed_prompt)
@@ -180,6 +198,17 @@ async def chatbot_conversation(prompt: Prompt):
         "greeting_instruction": greeting_instruction
     })
 
-    chat_history.append({"Usuario": processed_prompt, "Bot": response})
+    if derived_to_advisor(response): derived = 1
 
-    return { "date": date, "chatbot_response": response }
+    chat_history.append({"Usuario": processed_prompt, "Bot": response})
+    time_end = time.time_ns()
+    total_response_time = (time_end - time_start) * (10**(-9))
+    current_session_time = (time.time_ns() - session_time) * (10**(-9))
+
+    return { 
+        "date": date, 
+        "chatbot_response": response, 
+        "derived_to_advisor": derived, 
+        "response_time_seconds": f"{total_response_time:.2f}",
+        "current_session_time": f"{current_session_time:.2f}"
+    }
