@@ -25,4 +25,4 @@ Este es un chatbot de atención al cliente desarrollado para la Etapa 3 de la Si
 - Ingresa `npm run dev` (o `npm.cmd run dev`) para levantar el servidor de React.
 
 ## IMPORTANTE
-El servidor de backend utiliza protección CORS. Si no recibes respuesta del chatbot, haz clic derecho y da clic en "Inspeccionar". Revisa la consola y verifica si hay algún error relacionado con el endpoint. En caso de tenerlo, modifiqué la línea 113 de `app.py`, agregando el link local del servidor de React (ej.: `http://localhost:5173/`).
+El servidor de backend utiliza protección CORS. Si no recibes respuesta del chatbot, haz clic derecho y da clic en "Inspeccionar". Revisa la consola y verifica si hay algún error relacionado con el endpoint. En caso de tenerlo, modifique la línea 113 de `app.py`, agregando el link local del servidor de React (ej.: `http://localhost:5173/`).
