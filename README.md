@@ -23,6 +23,10 @@ Este es un chatbot de atención al cliente desarrollado para la Etapa 3 de la Si
 - Ubícate en la carpeta `frontend/chatbot-demo`.
 - Abre la terminal e ingresa `npm install` (o `npm.cmd install`) para instalar las dependencias necesarias.
 - Ingresa `npm run dev` (o `npm.cmd run dev`) para levantar el servidor de React.
+- El frontend utiliza una variable de entorno (`.env`) en donde se coloca el enlace del backend para conectarlo. Este archivo se debe ver así:
+```
+VITE_LLM_URL = Link_backend
+```
 
 ## IMPORTANTE
 El servidor de backend utiliza protección CORS. Si no recibes respuesta del chatbot, haz clic derecho y da clic en "Inspeccionar". Revisa la consola y verifica si hay algún error relacionado con el endpoint. En caso de tenerlo, modifique la línea 113 de `app.py`, agregando el link local del servidor de React (ej.: `http://localhost:5173/`).
